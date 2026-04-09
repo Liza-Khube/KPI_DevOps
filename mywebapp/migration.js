@@ -1,7 +1,7 @@
 const pool = require('./db');
 
 const migration = async () => {
-  const client = await pool.client();
+  const client = await pool.connect();
   try {
     console.log('Start migration');
 
@@ -11,7 +11,7 @@ const migration = async () => {
     id     SERIAL PRIMARY KEY,
     title   VARCHAR(255) NOT NULL,
     status  VARCHAR(50) NOT NULL DEFAULT 'undone'
-            CHECK (status IN ('undone, 'done'),
+            CHECK (status IN ('undone', 'done')),
     created_at  TIMESTAMP NOT NULL DEFAULT NOW()
     )
     `,
@@ -19,7 +19,7 @@ const migration = async () => {
 
     await client.query(
       `
-    CREATE INDEX IF NOT EXIST idx_tasks_status ON tasks(status)
+    CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status)
     `,
     );
 
