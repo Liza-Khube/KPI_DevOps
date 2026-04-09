@@ -8,7 +8,8 @@ app.use('/tasks', tasksRouter);
 app.use('/health', healthRouter);
 
 app.get('/', (req, res) => {
-  if (!req.accepts('text/html')) {
+  const acceptFormat = req.headers['accept'];
+  if (acceptFormat !== 'text/html') {
     return res.status(406).send('Invalid Accept Header: this endpoint only supports text/html.');
   }
   res.status(200).send(`
