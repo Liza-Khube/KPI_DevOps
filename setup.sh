@@ -7,7 +7,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-APP_DIR="$(dirname "$SCRIPT_DIR")"
+APP_DIR="/opt/mywebapp"
 DB_NAME="mywebapp_db"
 DB_USER="mywebapp"
 DB_PASSWORD="mypassword"
@@ -21,7 +21,10 @@ echo "1 - Installing packages"
 apt update
 apt install -y git nginx postgresql nodejs npm
 
-cd "$APP_DIR"
+echo "Copying app to $APP_DIR"
+mkdir -p $APP_DIR
+cp -r "$SCRIPT_DIR/mywebapp/." $APP_DIR
+cd $APP_DIR
 npm install
 
 echo "2 - Creating users"
@@ -81,15 +84,12 @@ cat > $CONFIG_DIR/config.json << EOF
 }
 EOF
 
-chmod o+x /home/student
-chown -R student:student "$APP_DIR"
-chmod -R o+rX "$APP_DIR"
-chown root:app $CONFIG_DIR/config.json
-chmod 640 $CONFIG_DIR/config.json
+chown -R app:app $APP_DIR
+chmod -R o+rX $APP_DIR
 
 echo "5 - Setting up systemd"
-cp "$APP_DIR/deploy/mywebapp.service" /etc/systemd/system/mywebapp.service
-cp "$APP_DIR/deploy/mywebapp.socket" /etc/systemd/system/mywebapp.socket
+cp "$SCRIPT_DIR/deploy/mywebapp.service" /etc/systemd/system/mywebapp.service
+cp "$SCRIPT_DIR/deploy/mywebapp.socket" /etc/systemd/system/mywebapp.socket
 systemctl daemon-reload
 systemctl enable mywebapp.socket
 
@@ -97,7 +97,7 @@ echo "6 - Starting service"
 systemctl start mywebapp.socket
 
 echo "7 - Configuring Nginx"
-cp "$APP_DIR/deploy/nginx.conf" /etc/nginx/sites-available/mywebapp
+cp "$SCRIPT_DIR/deploy/nginx.conf" /etc/nginx/sites-available/mywebapp
 ln -sf /etc/nginx/sites-available/mywebapp /etc/nginx/sites-enabled/mywebapp
 rm -f /etc/nginx/sites-enabled/default
 nginx -t
@@ -118,5 +118,5 @@ if [[ -n "$DEFAULT_USER" && \
     echo "User $DEFAULT_USER has been locked and their sessions terminated."
 fi
 
-echo "Installation completed ✓"
+echo "Installation completed"
 echo "You may log in as 'student', 'teacher' or 'operator' with password '12345678'"

@@ -1,6 +1,6 @@
 [Unit]
 Description=mywebapp Task Tracker
-After=network.target postgresql.service
+After=network.target postgresql.service mywebapp.socket
 Requires=postgresql.service mywebapp.socket
 
 [Service]
@@ -8,10 +8,10 @@ User=app
 Group=app
 
 
-WorkingDirectory=/home/student/mywebapp
+WorkingDirectory=/opt/mywebapp
 
-ExecStartPre=/usr/bin/node /home/student/mywebapp/mywebapp/migration.js
-ExecStart=/usr/bin/node /home/student/mywebapp/mywebapp/server.js
+ExecStartPre=/usr/bin/node /opt/mywebapp/migration.js
+ExecStart=/usr/bin/node /opt/mywebapp/server.js
 
 Environment=CONFIG_PATH=/etc/mywebapp/config.json
 
