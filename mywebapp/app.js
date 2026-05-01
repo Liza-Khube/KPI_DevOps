@@ -15,9 +15,9 @@ app.get('/', (req, res) => {
   res.status(200).send(`
     <html><body><h1>mywebapp — Task Tracker</h1>
         <ul>
-          <li>GET /tasks — список всіх задач</li>
-          <li>POST /tasks — створити нову задачу</li>
-          <li>POST /tasks/:id/done — змінити статус задачі на виконано</li>
+          <li>GET /tasks — list of all tasks</li>
+          <li>POST /tasks — create a new task</li>
+          <li>POST /tasks/:id/done — change the task status to “completed”</li>
         </ul>
       </body></html>
   `);
