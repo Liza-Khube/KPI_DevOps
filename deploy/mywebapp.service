@@ -1,0 +1,22 @@
+[Unit]
+Description=mywebapp Task Tracker
+After=network.target postgresql.service
+Requires=postgresql.service mywebapp.socket
+
+[Service]
+User=app
+Group=app
+
+
+WorkingDirectory=/home/student/mywebapp
+
+ExecStartPre=/usr/bin/node /home/student/mywebapp/mywebapp/migration.js
+ExecStart=/usr/bin/node /home/student/mywebapp/mywebapp/server.js
+
+Environment=CONFIG_PATH=/etc/mywebapp/config.json
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
