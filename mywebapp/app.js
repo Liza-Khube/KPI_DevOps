@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
         <ul>
           <li>GET /tasks - list of all tasks</li>
           <li>POST /tasks - create a new task</li>
-          <li>POST /tasks/:id/done - change the task status to “completed”</li>
+          <li>POST /tasks/:id/done - change the task status to “done”</li>
         </ul>
       </body></html>
   `);

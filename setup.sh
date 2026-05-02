@@ -66,6 +66,7 @@ echo "Copying app to $APP_DIR"
 mkdir -p $APP_DIR
 cp -r "$SCRIPT_DIR/mywebapp/." $APP_DIR
 cd $APP_DIR
+echo "Installing project dependencies"
 npm install
 
 chown -R root:app $APP_DIR
@@ -120,7 +121,7 @@ if [[ -n "$DEFAULT_USER" && \
       "$DEFAULT_USER" != "operator" && \
       "$DEFAULT_USER" != "app" ]]; then
     usermod -L $DEFAULT_USER
-    echo "User $DEFAULT_USER has been locked and their sessions terminated."
+    echo "User $DEFAULT_USER has been locked"
 fi
 
 echo "Installation completed"
