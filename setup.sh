@@ -21,12 +21,6 @@ echo "1 - Installing packages"
 apt update
 apt install -y git nginx postgresql nodejs npm
 
-echo "Copying app to $APP_DIR"
-mkdir -p $APP_DIR
-cp -r "$SCRIPT_DIR/mywebapp/." $APP_DIR
-cd $APP_DIR
-npm install
-
 echo "2 - Creating users"
 useradd -m -s /bin/bash student
 echo "student:12345678" | chpasswd
@@ -66,7 +60,17 @@ CREATE USER $DB_USER WITH PASSWORD '${DB_PASSWORD}';
 CREATE DATABASE $DB_NAME OWNER $DB_USER;
 EOF
 
-echo "4 - Creating config file"
+echo "4 - Copying app and creating config file"
+echo "Copying app to $APP_DIR"
+mkdir -p $APP_DIR
+cp -r "$SCRIPT_DIR/mywebapp/." $APP_DIR
+cd $APP_DIR
+npm install
+
+chown -R root:app $APP_DIR
+chmod -R 750 $APP_DIR
+
+echo "Creating config file"
 mkdir -p $CONFIG_DIR
 cat > $CONFIG_DIR/config.json << EOF
 {
@@ -84,8 +88,8 @@ cat > $CONFIG_DIR/config.json << EOF
 }
 EOF
 
-chown -R app:app $APP_DIR
-chmod -R o+rX $APP_DIR
+chown root:app $CONFIG_DIR/config.json
+chmod 640 $CONFIG_DIR/config.json
 
 echo "5 - Setting up systemd"
 cp "$SCRIPT_DIR/deploy/mywebapp.service" /etc/systemd/system/mywebapp.service
