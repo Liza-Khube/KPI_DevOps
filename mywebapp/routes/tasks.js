@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
   const acceptFormat = getAcceptFormat(req);
 
   if (acceptFormat === null)
-    return res.status(406).send('Invalid Accept Header: use text/html or application/json');
+    return res.status(406).send('Invalid Accept Header: use text/html or application/json\n');
 
   try {
     const { rows } = await db.query(
@@ -41,20 +41,20 @@ router.get('/', async (req, res) => {
     }
     return res.status(200).json(rows);
   } catch (err) {
-    res.status(500).send(`Error: ${err.message}`);
+    res.status(500).send(`Error: ${err.message}\n`);
   }
 });
 
 router.post('/', async (req, res) => {
   const { title } = req.body;
   if (!title) {
-    return res.status(400).send('Title is required');
+    return res.status(400).send('Title is required\n');
   }
 
   const acceptFormat = getAcceptFormat(req);
 
   if (acceptFormat === null)
-    return res.status(406).send('Invalid Accept Header: use text/html or application/json');
+    return res.status(406).send('Invalid Accept Header: use text/html or application/json\n');
 
   try {
     const { rows } = await db.query('INSERT INTO tasks (title) VALUES ($1) RETURNING *', [title]);
@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
     }
     return res.status(201).json(rows[0]);
   } catch (err) {
-    res.status(500).send('Error: ', err.message);
+    res.status(500).send(`Error: ${err.message}\n`);
   }
 });
 
@@ -75,7 +75,7 @@ router.post('/:id/done', async (req, res) => {
   const acceptFormat = getAcceptFormat(req);
 
   if (acceptFormat === null)
-    return res.status(406).send('Invalid Accept Header: use text/html or application/json');
+    return res.status(406).send('Invalid Accept Header: use text/html or application/json\n');
 
   const { id } = req.params;
 
@@ -86,7 +86,7 @@ router.post('/:id/done', async (req, res) => {
     ]);
 
     if (rows.length === 0) {
-      return res.status(404).send(`Task with id ${id} not found`);
+      return res.status(404).send(`Task with id ${id} not found\n`);
     }
 
     if (acceptFormat === 'html') {
@@ -98,7 +98,7 @@ router.post('/:id/done', async (req, res) => {
     }
     return res.status(200).json(rows[0]);
   } catch (err) {
-    res.status(500).send(`Error: ${err.message}`);
+    res.status(500).send(`Error: ${err.message}\n`);
   }
 });
 
