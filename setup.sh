@@ -25,6 +25,7 @@ echo "2 - Creating users"
 useradd -m -s /bin/bash student
 echo "student:12345678" | chpasswd
 usermod -aG sudo student
+chage -d 0 student
 
 useradd -m -s /bin/bash teacher
 echo "teacher:12345678" | chpasswd
