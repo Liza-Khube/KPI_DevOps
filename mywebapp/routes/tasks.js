@@ -41,7 +41,7 @@ router.get('/', async (req, res) => {
     }
     return res.status(200).json(rows);
   } catch (err) {
-    res.status(500).send('Error: ', err.message);
+    res.status(500).send(`Error: ${err.message}`);
   }
 });
 
@@ -84,6 +84,11 @@ router.post('/:id/done', async (req, res) => {
       'done',
       id,
     ]);
+
+    if (rows.length === 0) {
+      return res.status(404).send(`Task with id ${id} not found`);
+    }
+
     if (acceptFormat === 'html') {
       const updatedTask = rows[0];
       return res.status(200).send(`<html>
@@ -93,7 +98,7 @@ router.post('/:id/done', async (req, res) => {
     }
     return res.status(200).json(rows[0]);
   } catch (err) {
-    res.status(500).send('Error: ', err.message);
+    res.status(500).send(`Error: ${err.message}`);
   }
 });
 
