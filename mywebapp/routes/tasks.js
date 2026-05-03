@@ -4,10 +4,10 @@ const db = require('../db');
 const router = express.Router();
 
 const getAcceptFormat = (req) => {
-  const acceptFormat = req.headers['accept'];
+  const acceptFormat = req.headers['accept'] || '';
 
-  if (acceptFormat === 'text/html') return 'html';
-  if (acceptFormat === 'application/json') return 'json';
+  if (acceptFormat.includes('text/html')) return 'html';
+  if (acceptFormat.includes('application/json')) return 'json';
   return null;
 };
 
