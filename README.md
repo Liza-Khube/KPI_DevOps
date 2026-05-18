@@ -1,7 +1,3 @@
-```
-
-```
-
 # Документація
 
 ## Варіант індивідуального завдання
@@ -283,4 +279,38 @@ sudo apt install curl
 
 ```
 cat /home/student/gradebook  # має бути 25
+```
+
+## Запуск проекту за допомогою Docker Compose
+
+---
+
+Команда для запуску:
+
+`docker compose up -d --build`
+
+Тестування:
+
+```
+# Перевірити статус
+docker compose ps
+
+# Перевірка health ендпоінтів
+curl http://127.0.0.1:8080/health/alive   # має не працює — порт не відкритий назовні
+sudo docker compose exec webapp wget -qO- http://127.0.0.1:8080/health/alive #має працювати та виводити ОК
+
+# Перевірка ендпоінтів бізнес-логіки через nginx
+# Список задач
+curl -H "Accept: application/json" http://localhost/tasks
+# Створити задачу
+curl -X POST \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "test task"}' \
+  http://localhost/tasks
+
+# Перевірка персистентності даних
+docker compose down
+docker compose up -d
+curl -H "Accept: application/json" http://localhost/tasks #дані повинні залишитись
 ```
